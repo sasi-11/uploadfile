@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import Auth from "./Auth";
 import "tailwindcss/tailwind.css";
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [category, setCategory] = useState("");
   const [collectionName, setCollectionName] = useState("");
   const [persistDirectory, setPersistDirectory] = useState("");
@@ -27,6 +29,14 @@ const App = () => {
       files,
     });
   };
+
+  const handleLogin = () => {
+    setIsLoggedIn(true); // Set the login state to true once the user logs in successfully
+  };
+
+  if (!isLoggedIn) {
+    return <Auth onLogin={handleLogin} />;
+  }
 
   return (
     <div className="p-8">
