@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Auth from "./Auth";
-import "tailwindcss/tailwind.css";
+import "./App.css";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -10,14 +10,30 @@ const App = () => {
   const [chunkingSize, setChunkingSize] = useState("");
   const [chunkingStrategy, setChunkingStrategy] = useState("");
   const [enableHybrid, setEnableHybrid] = useState(false);
-  const [password, setPassword] = useState("");
   const [files, setFiles] = useState([]);
 
   const handleFileChange = (e) => {
-    setFiles([...e.target.files]);
+    const selectedFiles = Array.from(e.target.files);
+
+    if (selectedFiles.length > 10) {
+      alert("You can only upload up to 10 PDF files at once.");
+      return;
+    }
+
+    const allPDF = selectedFiles.every(
+      (file) => file.type === "application/pdf"
+    );
+    if (!allPDF) {
+      alert("Only PDF files are allowed.");
+      return;
+    }
+
+    setFiles(selectedFiles);
+    alert(`${selectedFiles.length} PDF file(s) selected.`);
   };
 
   const handleSubmit = () => {
+    alert("Your documents have been submitted for ingestion.");
     console.log({
       category,
       collectionName,
@@ -25,13 +41,12 @@ const App = () => {
       chunkingSize,
       chunkingStrategy,
       enableHybrid,
-      password,
       files,
     });
   };
 
   const handleLogin = () => {
-    setIsLoggedIn(true); // Set the login state to true once the user logs in successfully
+    setIsLoggedIn(true);
   };
 
   if (!isLoggedIn) {
@@ -39,13 +54,13 @@ const App = () => {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Document Ingestion</h1>
+    <div className="container">
+      <h1>Document Ingestion</h1>
 
-      <div className="mb-4">
-        <label className="block mb-2">File Category</label>
+      <div className="form-group">
+        <label htmlFor="file-category">File Category</label>
         <select
-          className="border rounded p-2 w-full"
+          id="file-category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
@@ -55,82 +70,68 @@ const App = () => {
         </select>
       </div>
 
-      <div className="mb-4">
-        <label className="block mb-2">Collection Name</label>
+      <div className="form-group">
+        <label htmlFor="collection-name">Collection Name</label>
         <input
-          type="text"
-          className="border rounded p-2 w-full"
+          id="collection-name"
           value={collectionName}
           onChange={(e) => setCollectionName(e.target.value)}
+          placeholder="Enter collection name..."
         />
       </div>
 
-      <div className="mb-4">
-        <label className="block mb-2">Persist Directory</label>
+      <div className="form-group">
+        <label htmlFor="persist-directory">Persist Directory</label>
         <input
-          type="text"
-          className="border rounded p-2 w-full"
+          id="persist-directory"
           value={persistDirectory}
           onChange={(e) => setPersistDirectory(e.target.value)}
+          placeholder="E.g. /path/to/folder"
         />
       </div>
 
-      <div className="mb-4">
-        <label className="block mb-2">Chunking Size</label>
+      <div className="form-group">
+        <label htmlFor="chunking-size">Chunking Size</label>
         <input
+          id="chunking-size"
           type="number"
-          className="border rounded p-2 w-full"
           value={chunkingSize}
           onChange={(e) => setChunkingSize(e.target.value)}
         />
       </div>
 
-      <div className="mb-4">
-        <label className="block mb-2">Chunking Strategy</label>
+      <div className="form-group">
+        <label htmlFor="chunking-strategy">Chunking Strategy</label>
         <input
-          type="text"
-          className="border rounded p-2 w-full"
+          id="chunking-strategy"
           value={chunkingStrategy}
           onChange={(e) => setChunkingStrategy(e.target.value)}
+          placeholder="E.g. 'by-page' or 'by-size'"
         />
       </div>
 
-      <div className="mb-4">
-        <label className="block mb-2">Enable Hybrid</label>
+      <div className="form-group switch-group">
         <input
           type="checkbox"
-          className="mr-2"
+          id="enable-hybrid"
           checked={enableHybrid}
           onChange={(e) => setEnableHybrid(e.target.checked)}
         />
-        Enable
+        <label htmlFor="enable-hybrid">Enable Hybrid</label>
       </div>
 
-      <div className="mb-4">
-        <label className="block mb-2">Password</label>
+      <div className="form-group">
+        <label htmlFor="pdf-upload">Upload PDF Files</label>
         <input
-          type="password"
-          className="border rounded p-2 w-full"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-
-      <div className="mb-4">
-        <label className="block mb-2">Upload PDF Files</label>
-        <input
+          id="pdf-upload"
           type="file"
-          className="border rounded p-2 w-full"
           accept=".pdf"
           multiple
           onChange={handleFileChange}
         />
       </div>
 
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
+      <button className="btn" onClick={handleSubmit}>
         Submit
       </button>
     </div>
