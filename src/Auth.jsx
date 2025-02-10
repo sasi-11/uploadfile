@@ -1,30 +1,24 @@
 import React, { useState } from "react";
+import { users } from "../public/data/mockapi"; // Import the mock users
 
 const Auth = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch("/data/mockapi.json");
-      const data = await response.json();
+    // Check if the user exists in the mock users array
+    const user = users.find(
+      (user) => user.username === username && user.password === password
+    );
 
-      const user = data.users.find(
-        (user) => user.username === username && user.password === password
-      );
-
-      if (user) {
-        setError("");
-        onLogin();
-      } else {
-        setError("Invalid username or password.");
-      }
-    } catch (err) {
-      console.error("Error fetching mock data:", err);
-      setError("Something went wrong. Please try again.");
+    if (user) {
+      setError("");
+      onLogin(); // Call onLogin callback on successful login
+    } else {
+      setError("Invalid username or password.");
     }
   };
 
