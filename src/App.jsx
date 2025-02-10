@@ -12,6 +12,9 @@ const App = () => {
   const [chunkingSize, setChunkingSize] = useState("");
   const [chunkingStrategy, setChunkingStrategy] = useState("");
   const [enableHybrid, setEnableHybrid] = useState(false);
+  const [embeddingModel, setEmbeddingModel] = useState(
+    "mixedbread-ai/mxbai-embed-large-v1"
+  );
   const [files, setFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [countdown, setCountdown] = useState(0);
@@ -42,7 +45,8 @@ const App = () => {
       !collectionName ||
       !persistDirectory ||
       !chunkingSize ||
-      !chunkingStrategy
+      !chunkingStrategy ||
+      !embeddingModel
     ) {
       toast.error("Please fill all required fields.");
       return false;
@@ -95,6 +99,7 @@ const App = () => {
       chunkingSize,
       chunkingStrategy,
       enableHybrid,
+      embeddingModel,
       files,
     });
   };
@@ -166,14 +171,35 @@ const App = () => {
             />
           </div>
 
+          <div className="form-group">
+            <label htmlFor="embedding-models">Embedding Model</label>
+            <select
+              id="embedding-models"
+              value={embeddingModel}
+              onChange={(e) => setEmbeddingModel(e.target.value)}
+            >
+              <option value="mixedbread-ai/mxbai-embed-large-v1">
+                mxbai-embed-large-v1
+              </option>
+              <option value="NovaSearch/stella_en_400M_v5">
+                stella_en_400M_v5
+              </option>
+              <option value="Alibaba-NLP/gte-large-en-v1.5">
+                gte-large-en-v1.5
+              </option>
+            </select>
+          </div>
+
           <div className="form-group switch-group">
-            <input
-              type="checkbox"
-              id="enable-hybrid"
-              checked={enableHybrid}
-              onChange={(e) => setEnableHybrid(e.target.checked)}
-            />
-            <label htmlFor="enable-hybrid">Enable Hybrid</label>
+            <div>
+              <input
+                type="checkbox"
+                id="enable-hybrid"
+                checked={enableHybrid}
+                onChange={(e) => setEnableHybrid(e.target.checked)}
+              />
+              <label htmlFor="enable-hybrid">Enable Hybrid</label>
+            </div>
           </div>
         </div>
 
