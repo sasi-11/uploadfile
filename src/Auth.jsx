@@ -9,11 +9,9 @@ const Auth = ({ onLogin }) => {
     e.preventDefault();
 
     try {
-      // Fetching the mock data from the public/data folder
       const response = await fetch("/data/mockapi.json");
       const data = await response.json();
 
-      // Checking if the user exists in the mock data
       const user = data.users.find(
         (user) => user.username === username && user.password === password
       );
