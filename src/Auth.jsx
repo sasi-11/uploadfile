@@ -20,7 +20,7 @@ const Auth = ({ onLogin }) => {
 
       if (user) {
         setError("");
-        onLogin(); // Call the parent login function on successful authentication
+        onLogin();
       } else {
         setError("Invalid username or password.");
       }
